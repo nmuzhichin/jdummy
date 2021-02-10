@@ -1,5 +1,13 @@
 # Jdummy
-The Jdummy is the simplest library for creating test objects.
+Jdummy is the simplest library for creating test objects.
+
+Jdummy provides capabilities:
+* creation of complex objects
+* creation and filling of collections
+* protection against cyclic object instantiation 
+
+
+Easy to use:
 
 Just call `Jdummy.of(..)` or `Jdummy.manyOf(..)`
 ```java
@@ -14,5 +22,5 @@ class VeryBoringTest {
 }
 ```
 
-# Release
+## Release
 In process  
