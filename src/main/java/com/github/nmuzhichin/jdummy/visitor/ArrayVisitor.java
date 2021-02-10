@@ -10,7 +10,7 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
 
     private final Random random = ThreadLocalRandom.current();
 
-    ArrayVisitor(MetaValueType type) {
+    ArrayVisitor(MetaValue type) {
         super(type);
     }
 
@@ -38,13 +38,13 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
     }
 
     private void visitAsBooleanArray() {
-        valueHolder.setValue(new boolean[]{true, false});
+        metaValue.setValue(new boolean[]{true, false});
     }
 
     private void visitAsByteArray() {
         var bytes = new byte[8];
         random.nextBytes(bytes);
-        valueHolder.setValue(bytes);
+        metaValue.setValue(bytes);
     }
 
     private void visitAsShortArray() {
@@ -52,7 +52,7 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
         for (int i = 0; i < shorts.length; i++) {
             shorts[i] = (short) random.nextInt(Short.MAX_VALUE);
         }
-        valueHolder.setValue(shorts);
+        metaValue.setValue(shorts);
     }
 
     private void visitAsCharacterArray() {
@@ -60,15 +60,15 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
         for (int i = 0; i < chars.length; i++) {
             chars[i] = (char) random.nextInt(Character.MAX_VALUE);
         }
-        valueHolder.setValue(chars);
+        metaValue.setValue(chars);
     }
 
     private void visitAsIntegerArray() {
-        valueHolder.setValue(random.ints(8).toArray());
+        metaValue.setValue(random.ints(8).toArray());
     }
 
     private void visitAsLongArray() {
-        valueHolder.setValue(random.longs(8).toArray());
+        metaValue.setValue(random.longs(8).toArray());
     }
 
     private void visitAsFloatArray() {
@@ -76,11 +76,11 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
         for (int i = 0; i < floats.length; i++) {
             floats[i] = random.nextFloat();
         }
-        valueHolder.setValue(floats);
+        metaValue.setValue(floats);
     }
 
     private void visitAsDoubleArray() {
-        valueHolder.setValue(random.doubles(8).toArray());
+        metaValue.setValue(random.doubles(8).toArray());
     }
 
     private void visitAsArray(Class<?> cls) {
@@ -90,6 +90,6 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
         for (int i = 0; i < 8; i++) {
             Array.set(array, i, Jdummy.of(componentType));
         }
-        valueHolder.setValue(array);
+        metaValue.setValue(array);
     }
 }

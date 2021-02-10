@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 final class EnumVisitor extends AbstractMetaValueVisitor {
 
-    EnumVisitor(MetaValueType type) {
+    EnumVisitor(MetaValue type) {
         super(type);
     }
 
@@ -15,7 +15,7 @@ final class EnumVisitor extends AbstractMetaValueVisitor {
         var constants = ((Class<? extends Enum<?>>) type).getEnumConstants();
         if (constants.length > 0) {
             int rangeRandomIdx = ThreadLocalRandom.current().nextInt(0, constants.length);
-            valueHolder.setValue(constants[rangeRandomIdx]);
+            metaValue.setValue(constants[rangeRandomIdx]);
         }
     }
 }

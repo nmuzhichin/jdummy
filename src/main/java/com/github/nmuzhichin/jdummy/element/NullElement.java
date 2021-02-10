@@ -11,6 +11,5 @@ public class NullElement extends Element {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-    }
+    public void accept(Visitor visitor) { }
 }

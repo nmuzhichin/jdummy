@@ -1,6 +1,10 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
 import com.github.nmuzhichin.jdummy.element.Elements;
+import com.github.nmuzhichin.jdummy.misc.Reflections;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Parameter;
 
 public final class Visitors {
 
@@ -8,17 +12,50 @@ public final class Visitors {
         // use static methods
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T forElements(MetaValueType type) {
-
-        try {
-            var elements = Elements.newAllElements(type.getClassType());
-            for (var e : elements) {
-                e.accept(type.getVisitor());
-            }
-            return (T) type.getValueHolder().getValue();
-        } finally {
-            OverflowGuard.INSTANCE.unprotect(type.getClassType());
+    private static Visitor findVisitor(Class<?> clazz, MetaValue type) {
+        Visitor visitor;
+        if (Reflections.isPrimitiveOrWrapper(clazz)) {
+            visitor = new PrimitiveVisitor(type);
+        } else if (clazz.isEnum()) {
+            visitor = new EnumVisitor(type);
+        } else if (clazz.isArray()) {
+            visitor = new ArrayVisitor(type);
+        } else if (Reflections.isCollectionsOrMap(clazz)) {
+            visitor = new CollectionVisitor(type);
+        } else if (Reflections.isJavaLibraryType(clazz)) {
+            visitor = new JavaCoreVisitor(type);
+        } else {
+            visitor = new PojoVisitor(type);
         }
+        return visitor;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T accept(MetaValue metaValue, Class<?> type) {
+        try {
+            var visitor = findVisitor(type, metaValue);
+            var elements = Elements.newAllElements(type);
+            for (var e : elements) {
+                e.accept(visitor);
+            }
+            return (T) metaValue.getValue();
+        } finally {
+            OverflowGuard.INSTANCE.unprotect(type);
+        }
+    }
+
+    public static <T> T accept(Parameter p) {
+        var metaValue = new MetaValue(p.getName(), p.getParameterizedType());
+        return accept(metaValue, p.getType());
+    }
+
+    public static <T> T accept(Field f) {
+        var metaValue = new MetaValue(f.getName(), f.getGenericType());
+        return accept(metaValue, f.getType());
+    }
+
+    public static <T> T accept(Class<T> c) {
+        var metaValue = new MetaValue(c.getSimpleName(), null);
+        return accept(metaValue, c);
     }
 }

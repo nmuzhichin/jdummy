@@ -11,7 +11,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     private Builder builder = new Builder();
 
-    PojoVisitor(MetaValueType type) {
+    PojoVisitor(MetaValue type) {
         super(type);
     }
 
@@ -34,10 +34,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     @Override
     public void visitParameter(Parameter parameter) {
-
-        var type = new MetaValueType(parameter.getType(), parameter.getName(), null);
-        var value = Visitors.forElements(type);
-        builder.constructorArgs.add(value);
+        builder.constructorArgs.add(Visitors.accept(parameter));
     }
 
     @Override
@@ -52,9 +49,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
         try {
             field.setAccessible(true);
             if (field.get(instance) == null) {
-                var type = new MetaValueType(field.getType(), field.getName(), field.getGenericType());
-                var value = Visitors.forElements(type);
-                field.set(instance, value);
+                field.set(instance, Visitors.accept(field));
             }
         } catch (Exception e) {
             // skip, field = null
@@ -66,11 +61,11 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     private Object tryBuild() {
 
-        if (builder != null && valueHolder.isEmpty()) {
-            valueHolder.setValue(builder.build());
+        if (builder != null && metaValue.isEmpty()) {
+            metaValue.setValue(builder.build());
             builder = null;
         }
-        return valueHolder.getValue();
+        return metaValue.getValue();
     }
 
     private static class Builder {

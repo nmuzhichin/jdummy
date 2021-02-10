@@ -1,6 +1,5 @@
 package com.github.nmuzhichin.jdummy;
 
-import com.github.nmuzhichin.jdummy.visitor.MetaValueType;
 import com.github.nmuzhichin.jdummy.visitor.Visitors;
 
 import java.util.stream.Stream;
@@ -12,7 +11,7 @@ public abstract class Jdummy {
     }
 
     public static <T> T of(Class<T> type) {
-        return Visitors.forElements(new MetaValueType(type, type.getSimpleName(), null));
+        return Visitors.accept(type);
     }
 
     public static <T> Stream<T> manyOf(Class<T> type) {

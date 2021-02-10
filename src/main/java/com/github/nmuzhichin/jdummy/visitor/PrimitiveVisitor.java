@@ -9,7 +9,7 @@ final class PrimitiveVisitor extends AbstractMetaValueVisitor {
 
     private final Random random = ThreadLocalRandom.current();
 
-    PrimitiveVisitor(MetaValueType type) {
+    PrimitiveVisitor(MetaValue type) {
         super(type);
     }
 
@@ -39,38 +39,38 @@ final class PrimitiveVisitor extends AbstractMetaValueVisitor {
     }
 
     private void visitAsVoid() {
-        valueHolder.setValue(null);
+        metaValue.setValue(null);
     }
 
     private void visitAsBoolean() {
-        valueHolder.setValue(random.nextBoolean());
+        metaValue.setValue(random.nextBoolean());
     }
 
     private void visitAsByte() {
-        valueHolder.setValue((byte) random.nextInt(Byte.MAX_VALUE));
+        metaValue.setValue((byte) random.nextInt(Byte.MAX_VALUE));
     }
 
     private void visitAsShort() {
-        valueHolder.setValue((short) random.nextInt(Short.MAX_VALUE));
+        metaValue.setValue((short) random.nextInt(Short.MAX_VALUE));
     }
 
     private void visitAsCharacter() {
-        valueHolder.setValue((char) random.nextInt(Character.MAX_VALUE));
+        metaValue.setValue((char) random.nextInt(Character.MAX_VALUE));
     }
 
     private void visitAsInteger() {
-        valueHolder.setValue(random.nextInt());
+        metaValue.setValue(random.nextInt());
     }
 
     private void visitAsLong() {
-        valueHolder.setValue(random.nextLong());
+        metaValue.setValue(random.nextLong());
     }
 
     private void visitAsFloat() {
-        valueHolder.setValue(random.nextFloat());
+        metaValue.setValue(random.nextFloat());
     }
 
     private void visitAsDouble() {
-        valueHolder.setValue(random.nextDouble());
+        metaValue.setValue(random.nextDouble());
     }
 }

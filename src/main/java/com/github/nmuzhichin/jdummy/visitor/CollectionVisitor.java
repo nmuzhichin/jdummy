@@ -41,7 +41,7 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
             LinkedList.class, LinkedList::new
     );
 
-    CollectionVisitor(MetaValueType type) {
+    CollectionVisitor(MetaValue type) {
         super(type);
     }
 
@@ -61,6 +61,7 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
         }
     }
 
+    @SuppressWarnings("RedundantCast")
     private void visitAsMap(Class<? extends Map> mapType) {
 
         var isEnumMap = EnumMap.class.isAssignableFrom(mapType);
@@ -70,7 +71,7 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
             var keyType = (Class<?>) types[0];
             var valueType = (Class<?>) types[1];
             if (isEnumMap) {
-                map = new EnumMap<>(((Class<? extends Enum>) keyType));
+                map = new EnumMap<>((Class<? extends Enum>) keyType);
             }
             var keyDummies = dummies(keyType);
             var valueDummies = dummies(valueType);
@@ -78,7 +79,7 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
                 map.put(keyDummies.get(i), valueDummies.get(i));
             }
         }
-        valueHolder.setValue(map);
+        metaValue.setValue(map);
     }
 
     private void visitAsSet(Class<? extends Set> setType) {
@@ -89,14 +90,14 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
         if (types.length > 0) {
             var clz = ((Class) types[0]);
             if (isEnumSet) {
-                valueHolder.setValue(EnumSet.allOf(clz));
+                metaValue.setValue(EnumSet.allOf(clz));
                 return;
             } else if (set != null) {
                 set.addAll(dummies(clz));
             }
         }
 
-        valueHolder.setValue(set);
+        metaValue.setValue(set);
     }
 
     private void visitAsList(Class<? extends List> listType) {
@@ -116,7 +117,8 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
 
     private Type[] getGenericType() {
 
-        if (typeMeta != null && typeMeta instanceof ParameterizedType) {
+        Type typeMeta = metaValue.getReflectType();
+        if (typeMeta instanceof ParameterizedType) {
             var arguments = ((ParameterizedType) typeMeta).getActualTypeArguments();
             if (arguments.length > 0) {
                 return arguments;
@@ -132,7 +134,7 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
             var clz = (Class) types[0];
             collection.addAll(dummies(clz));
         }
-        valueHolder.setValue(collection);
+        metaValue.setValue(collection);
     }
 
     private List<Object> dummies(Class<?> clz) {

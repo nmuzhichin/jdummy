@@ -2,13 +2,14 @@ package com.github.nmuzhichin.jdummy.visitor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 final class JavaCoreVisitor extends AbstractMetaValueVisitor {
 
-    JavaCoreVisitor(MetaValueType type) {
+    JavaCoreVisitor(MetaValue type) {
         super(type);
     }
 
@@ -19,7 +20,8 @@ final class JavaCoreVisitor extends AbstractMetaValueVisitor {
         if (CharSequence.class.isAssignableFrom(type)) {
             visitAsStringType();
         } else if (packageName.startsWith("java.time")
-                || Timestamp.class.isAssignableFrom(type)) {
+                || Timestamp.class.isAssignableFrom(type)
+                || Date.class.isAssignableFrom(type)) {
             visitAsTimeType(type);
         } else if (packageName.startsWith("java.math")) {
             visitAsMathType(type);
@@ -29,56 +31,58 @@ final class JavaCoreVisitor extends AbstractMetaValueVisitor {
     private void visitAsStringType() {
         // todo use field meta for info about string and try generate
         // todo dummy-text more smart
-        valueHolder.setValue("Hello, I'm Jdummy");
+        metaValue.setValue("Hello, I'm Jdummy");
     }
 
     private void visitAsTimeType(Class<?> type) {
 
         if (Clock.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Clock.systemUTC());
+            metaValue.setValue(Clock.systemUTC());
         } else if (Instant.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Instant.now());
+            metaValue.setValue(Instant.now());
         } else if (LocalDate.class.isAssignableFrom(type)) {
-            valueHolder.setValue(LocalDate.now());
+            metaValue.setValue(LocalDate.now());
         } else if (LocalDateTime.class.isAssignableFrom(type)) {
-            valueHolder.setValue(LocalDateTime.now());
+            metaValue.setValue(LocalDateTime.now());
         } else if (LocalTime.class.isAssignableFrom(type)) {
-            valueHolder.setValue(LocalTime.now());
+            metaValue.setValue(LocalTime.now());
         } else if (MonthDay.class.isAssignableFrom(type)) {
-            valueHolder.setValue(MonthDay.now());
+            metaValue.setValue(MonthDay.now());
         } else if (OffsetDateTime.class.isAssignableFrom(type)) {
-            valueHolder.setValue(OffsetDateTime.now());
+            metaValue.setValue(OffsetDateTime.now());
         } else if (OffsetTime.class.isAssignableFrom(type)) {
-            valueHolder.setValue(OffsetTime.now());
+            metaValue.setValue(OffsetTime.now());
         } else if (Year.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Year.now());
+            metaValue.setValue(Year.now());
         } else if (YearMonth.class.isAssignableFrom(type)) {
-            valueHolder.setValue(YearMonth.now());
+            metaValue.setValue(YearMonth.now());
         } else if (ZonedDateTime.class.isAssignableFrom(type)) {
-            valueHolder.setValue(ZonedDateTime.now());
+            metaValue.setValue(ZonedDateTime.now());
         } else if (DayOfWeek.class.isAssignableFrom(type)) {
-            valueHolder.setValue(DayOfWeek.of(42));
+            metaValue.setValue(DayOfWeek.of(42));
         } else if (Month.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Month.of(4));
+            metaValue.setValue(Month.of(4));
         } else if (ZoneId.class.isAssignableFrom(type)) {
-            valueHolder.setValue(ZoneId.of("-12"));
+            metaValue.setValue(ZoneId.of("-12"));
         } else if (Period.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Period.ofDays(4));
+            metaValue.setValue(Period.ofDays(4));
         } else if (Duration.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Duration.ofHours(42));
+            metaValue.setValue(Duration.ofHours(42));
         } else if (ZoneOffset.class.isAssignableFrom(type)) {
-            valueHolder.setValue(ZoneOffset.ofHours(12));
+            metaValue.setValue(ZoneOffset.ofHours(12));
         } else if (Timestamp.class.isAssignableFrom(type)) {
-            valueHolder.setValue(Timestamp.valueOf(LocalDateTime.now()));
+            metaValue.setValue(Timestamp.from(Instant.now()));
+        } else if (Date.class.isAssignableFrom(type)) {
+            metaValue.setValue(Date.from(Instant.now()));
         }
     }
 
     private void visitAsMathType(Class<?> type) {
 
         if (BigInteger.class.isAssignableFrom(type)) {
-            valueHolder.setValue(BigInteger.valueOf(ThreadLocalRandom.current().nextLong()));
+            metaValue.setValue(BigInteger.valueOf(ThreadLocalRandom.current().nextLong()));
         } else if (BigDecimal.class.isAssignableFrom(type)) {
-            valueHolder.setValue(BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble()));
+            metaValue.setValue(BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble()));
         }
     }
 }
