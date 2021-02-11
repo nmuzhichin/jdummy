@@ -1,11 +1,27 @@
 plugins {
+    id 'idea'
+    id 'jacoco'
     id 'java-library'
+    id 'signing'
+    id 'maven-publish'
 }
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+group = 'com.github.nmuzhichin'
+version = '1.0.0'
+description = 'Jdummy is the simplest library for creating test objects'
 
 repositories {
     mavenCentral()
     jcenter()
     mavenLocal()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 dependencies {
@@ -14,6 +30,66 @@ dependencies {
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.enabled true
+    }
+}
+
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = rootProject.name
+                description = rootProject.description
+                url = 'https://github.com/nmuzhichin/jdummy'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'nmuzhichin'
+                        name = 'Nikita Muzhichin'
+                        email = 'nmuzhichin@yahoo.com'
+                    }
+                }
+                issueManagement {
+                    system = 'GitHub'
+                    url = 'https://github.com/nmuzhichin/jdummy/issues'
+                }
+                scm {
+                    connection = 'scm:git@github.com:nmuzhichin/jdummy.git'
+                    developerConnection = 'scm:git@github.com:nmuzhichin/jdummy.git'
+                    url = 'https://github.com/nmuzhichin/jdummy'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username "$ossrhUsername"
+                password "$ossrhPassword"
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    options.addBooleanOption('html5', true)
 }
