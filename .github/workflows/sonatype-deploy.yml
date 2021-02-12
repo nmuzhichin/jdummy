@@ -31,7 +31,7 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           APP_VERSION: ${{ github.event.inputs.release_version }}
         run: |
-          echo $GPG_FILE | base64 -d > secring.gpg
+          echo "$GPG_FILE" | base64 -d > ./secring.gpg
           ./gradlew publish \
           -Psigning.secretKeyRingFile=secring.gpg \
           -Psigning.password=$GPG_PASSWORD \
