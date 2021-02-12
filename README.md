@@ -6,7 +6,6 @@ Jdummy provides capabilities:
 * creation and filling of collections
 * protection against cyclic object instantiation 
 
-
 Easy to use:
 
 Just call `Jdummy.of(..)` or `Jdummy.manyOf(..)`
@@ -23,4 +22,16 @@ class VeryBoringTest {
 ```
 
 ## Release
-In process  
+Get from maven
+```xml
+<dependency>
+    <groupId>com.github.nmuzhichin</groupId>
+    <artifactId>jdummy</artifactId>
+    <version>1.0.0</version>
+    <scope>test</scope>
+</dependency>
+```
+or gradle
+```groovy
+testImplementation 'com.github.nmuzhichin:jdummy:1.0.0'
+```
