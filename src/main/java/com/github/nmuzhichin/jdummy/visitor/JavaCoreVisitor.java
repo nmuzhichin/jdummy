@@ -1,10 +1,13 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
+import com.github.nmuzhichin.jdummy.modify.ModifierServiceLoader;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 final class JavaCoreVisitor extends AbstractMetaValueVisitor {
@@ -29,9 +32,13 @@ final class JavaCoreVisitor extends AbstractMetaValueVisitor {
     }
 
     private void visitAsStringType() {
-        // todo use field meta for info about string and try generate
-        // todo dummy-text more smart
-        metaValue.setValue("Hello, I'm Jdummy");
+        var value = ModifierServiceLoader.newServiceLoader()
+                .openValueModifierStream()
+                .map(it -> it.modify(metaValue.getMeta(), String.class))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("Hello, I'm Jdummy");
+        metaValue.setValue(value);
     }
 
     private void visitAsTimeType(Class<?> type) {

@@ -10,7 +10,7 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 group = 'com.github.nmuzhichin'
-version = project.findProperty("app.version") ?: '1.0.0'
+version = project.findProperty("app.version") ?: '1.0.2'
 description = 'Jdummy is the simplest library for creating test objects'
 
 ext {

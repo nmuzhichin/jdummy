@@ -45,6 +45,12 @@ public class User extends Principal {
         this.roles = roles;
     }
 
+    private User(String id, FullName fullName, List<Role> roles) {
+        this.id = Long.parseLong(id);
+        this.fullName = fullName;
+        this.roles = roles;
+    }
+
     public User(Long id, FullName fullName) {
         this(id, fullName, null);
     }
