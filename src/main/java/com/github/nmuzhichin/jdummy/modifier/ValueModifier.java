@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.modify;
+package com.github.nmuzhichin.jdummy.modifier;
 
 /**
  * @author nmuzhichin

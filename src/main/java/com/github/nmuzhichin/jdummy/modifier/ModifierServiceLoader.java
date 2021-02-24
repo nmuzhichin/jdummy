@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.modify;
+package com.github.nmuzhichin.jdummy.modifier;
 
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
