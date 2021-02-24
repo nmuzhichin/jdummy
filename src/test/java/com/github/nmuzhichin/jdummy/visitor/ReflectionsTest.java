@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.misc;
+package com.github.nmuzhichin.jdummy.visitor;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

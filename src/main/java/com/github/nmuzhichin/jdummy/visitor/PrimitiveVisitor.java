@@ -1,7 +1,5 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.misc.Reflections;
-
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 

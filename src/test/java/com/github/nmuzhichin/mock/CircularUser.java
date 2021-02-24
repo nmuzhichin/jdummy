@@ -5,6 +5,8 @@ import java.util.Set;
 
 public class CircularUser {
 
+    private String timeZone;
+
     private Set<CircularAttribute> circularAttributes;
 
     private List<CircularAttribute> circularAttributeList;
@@ -15,5 +17,9 @@ public class CircularUser {
 
     public List<CircularAttribute> getCircularAttributeList() {
         return circularAttributeList;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
     }
 }

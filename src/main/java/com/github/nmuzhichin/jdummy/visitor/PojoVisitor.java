@@ -1,5 +1,7 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
+import com.github.nmuzhichin.jdummy.cache.CacheWriter;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -9,10 +11,17 @@ import java.util.function.Function;
 
 final class PojoVisitor extends AbstractMetaValueVisitor {
 
-    private Builder builder = new Builder();
+    private Builder builder;
+
+    private VisitorAccepter accepter;
+
+    private CacheWriter cacheWriter;
 
     PojoVisitor(MetaValue type) {
         super(type);
+        this.builder = new Builder();
+        this.accepter = VisitorContext.currentAccepter();
+        this.cacheWriter = VisitorContext.currentCacheWriter();
     }
 
     @Override
@@ -22,7 +31,6 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     @Override
     public void visitConstructor(Constructor<?> constructor) {
-
         builder.constructorInvocation = arg -> {
             try {
                 return constructor.newInstance(arg);
@@ -34,35 +42,35 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     @Override
     public void visitParameter(Parameter parameter) {
-        builder.constructorArgs.add(Visitors.accept(parameter));
+        builder.constructorArgs.add(accepter.accept(parameter));
     }
 
     @Override
     public void visitField(Field field) {
 
-        var instance = tryBuild();
-
-        if (OverflowGuard.CACHE.isPresent(field.getType())) {
-            return;
-        }
-
-        try {
-            field.setAccessible(true);
-            if (field.get(instance) == null) {
-                field.set(instance, Visitors.accept(field));
+        if (!cacheWriter.contains(field.getType())) {
+            try {
+                var instance = tryBuild();
+                field.setAccessible(true);
+                if (field.get(instance) == null) {
+                    field.set(instance, accepter.accept(field));
+                }
+            } catch (Exception e) {
+                // skip, field = null
+                // todo add log
+                e.printStackTrace();
+            } finally {
+                field.setAccessible(false);
             }
-        } catch (Exception e) {
-            // skip, field = null
-            e.printStackTrace();
-        } finally {
-            field.setAccessible(false);
         }
     }
 
     private Object tryBuild() {
 
         if (builder != null && metaValue.isEmpty()) {
-            metaValue.setValue(builder.build());
+            var value = builder.build();
+            cacheWriter.write(builder.type, value);
+            metaValue.setValue(value);
             builder = null;
         }
         return metaValue.getValue();
@@ -79,9 +87,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
         private Object build() {
 
             try {
-                var value = constructorInvocation.apply(constructorArgs.toArray());
-                OverflowGuard.CACHE.add(type, value);
-                return value;
+                return constructorInvocation.apply(constructorArgs.toArray());
             } finally {
                 constructorArgs.clear();
                 constructorInvocation = null;

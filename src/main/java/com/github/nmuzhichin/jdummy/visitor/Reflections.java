@@ -1,9 +1,9 @@
-package com.github.nmuzhichin.jdummy.misc;
+package com.github.nmuzhichin.jdummy.visitor;
 
 import java.util.Collection;
 import java.util.Map;
 
-public final class Reflections {
+final class Reflections {
 
     private static final Map<Class<?>, Class<?>> primitiveWrappers;
 
@@ -25,23 +25,23 @@ public final class Reflections {
         // use static methods
     }
 
-    public static boolean isPrimitiveOrWrapper(Class<?> type) {
+    static boolean isPrimitiveOrWrapper(Class<?> type) {
         return type.isPrimitive() || isPrimitiveWrapper(type);
     }
 
-    public static boolean isPrimitiveWrapper(Class<?> type) {
+    static boolean isPrimitiveWrapper(Class<?> type) {
         return primitiveWrappers.containsKey(type);
     }
 
-    public static Class<?> primitiveUnwrap(Class<?> type) {
+    static Class<?> primitiveUnwrap(Class<?> type) {
         return isPrimitiveWrapper(type) ? primitiveWrappers.get(type) : type;
     }
 
-    public static boolean isCollectionsOrMap(Class<?> type) {
+    static boolean isCollectionsOrMap(Class<?> type) {
         return Collection.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type);
     }
 
-    public static boolean isJavaLibraryType(Class<?> type) {
+    static boolean isJavaLibraryType(Class<?> type) {
 
         var typePackageName = type.getPackageName();
         return typePackageName.startsWith("java.lang")

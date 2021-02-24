@@ -4,12 +4,12 @@ import com.github.nmuzhichin.mock.FullName;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class VisitorsTest {
+class VisitorContextTest {
 
     @Test
     void forElements() {
 
-        var fullName = Visitors.accept(FullName.class);
+        var fullName = VisitorContext.currentAccepter().accept(FullName.class);
         Assertions.assertNotNull(fullName);
         Assertions.assertNotNull(fullName.getSurname());
         Assertions.assertNotNull(fullName.getLastName());
