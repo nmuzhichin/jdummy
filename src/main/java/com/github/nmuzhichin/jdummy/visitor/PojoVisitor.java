@@ -17,7 +17,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     @Override
     public void visitType(Class<?> type) {
-        OverflowGuard.INSTANCE.protect(type);
+        builder.setType(type);
     }
 
     @Override
@@ -42,7 +42,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
         var instance = tryBuild();
 
-        if (OverflowGuard.INSTANCE.underProtect(field.getType())) {
+        if (OverflowGuard.CACHE.isPresent(field.getType())) {
             return;
         }
 
@@ -74,14 +74,22 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
         private Function<Object[], Object> constructorInvocation;
 
+        private Class<?> type;
+
         private Object build() {
 
             try {
-                return constructorInvocation.apply(constructorArgs.toArray());
+                var value = constructorInvocation.apply(constructorArgs.toArray());
+                OverflowGuard.CACHE.add(type, value);
+                return value;
             } finally {
                 constructorArgs.clear();
                 constructorInvocation = null;
             }
+        }
+
+        public void setType(Class<?> type) {
+            this.type = type;
         }
     }
 }

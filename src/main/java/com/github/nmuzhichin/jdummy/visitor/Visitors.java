@@ -32,16 +32,20 @@ public final class Visitors {
 
     @SuppressWarnings("unchecked")
     private static <T> T accept(MetaValue metaValue, Class<?> type) {
-        try {
+
+        Object tVal;
+        if (OverflowGuard.CACHE.isPresent(type)) {
+            tVal = OverflowGuard.CACHE.get(type);
+        } else {
             var visitor = findVisitor(type, metaValue);
             var elements = Elements.newAllElements(type);
             for (var e : elements) {
                 e.accept(visitor);
             }
-            return (T) metaValue.getValue();
-        } finally {
-            OverflowGuard.INSTANCE.unprotect(type);
+            tVal = metaValue.getValue();
         }
+
+        return (T) tVal;
     }
 
     public static <T> T accept(Parameter p) {

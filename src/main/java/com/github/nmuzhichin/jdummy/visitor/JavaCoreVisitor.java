@@ -1,6 +1,6 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.modify.ModifierServiceLoader;
+import com.github.nmuzhichin.jdummy.modifier.ModifierServiceLoader;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

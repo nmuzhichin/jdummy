@@ -1,22 +1,26 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 enum OverflowGuard {
-    INSTANCE;
+    CACHE;
 
-    private final Set<Class<?>> stopList = new HashSet<>();
+    private final Map<Class<?>, Object> stopList = new ConcurrentHashMap<>(32);
 
-    boolean underProtect(Class<?> clz) {
-        return stopList.contains(clz);
+    boolean isPresent(Class<?> clz) {
+        return stopList.containsKey(clz);
     }
 
-    void unprotect(Class<?> clz) {
+    void remove(Class<?> clz) {
         stopList.remove(clz);
     }
 
-    void protect(Class<?> clz) {
-        stopList.add(clz);
+    void add(Class<?> clz, Object value) {
+        stopList.put(clz, value);
+    }
+
+    public Object get(Class<?> type) {
+        return stopList.get(type);
     }
 }
