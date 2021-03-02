@@ -2,16 +2,24 @@ package com.github.nmuzhichin.jdummy.modifier;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class ZoneStringValueModifier implements ValueModifier {
+public class ZoneStringValueModifier extends ValueModifier {
 
     private static final String zoneName = "zone";
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T modify(String name, Class<T> valueType) {
+    public <T> T createValue(String meta) {
+        int id = ThreadLocalRandom.current().nextInt(-12, 15);
+        return (T) (id >= 0 ? "+" + id : String.valueOf(id));
+    }
 
-        return valueType == String.class && name != null && name.toLowerCase().contains(zoneName)
-                ? (T) String.valueOf(ThreadLocalRandom.current().nextInt(-12, 15))
-                : null;
+    @Override
+    public boolean verify(String meta) {
+        return meta.toLowerCase().contains(zoneName);
+    }
+
+    @Override
+    public Class<?> valueType() {
+        return String.class;
     }
 }

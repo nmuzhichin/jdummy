@@ -1,21 +1,16 @@
 package com.github.nmuzhichin.jdummy.modifier;
 
+import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class ModifierServiceLoader {
 
-    private final ServiceLoader<ValueModifier> valueModifiers;
-
-    private ModifierServiceLoader() {
-        this.valueModifiers = ServiceLoader.load(ValueModifier.class);
-    }
-
-    public static ModifierServiceLoader newServiceLoader() {
-        return new ModifierServiceLoader();
-    }
-
-    public Stream<ValueModifier> openValueModifierStream() {
-        return valueModifiers.stream().map(ServiceLoader.Provider::get);
+    public static Map<Class<?>, List<ValueModifier>> load() {
+        return ServiceLoader.load(ValueModifier.class)
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .collect(Collectors.groupingByConcurrent(ValueModifier::valueType));
     }
 }

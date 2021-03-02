@@ -8,7 +8,7 @@ class ModifierServiceLoaderTest {
     @Test
     void newConverterServiceLoader() {
 
-        var converterServiceLoader = ModifierServiceLoader.newServiceLoader();
-        Assertions.assertEquals(1, converterServiceLoader.openValueModifierStream().count());
+        var converterServiceLoader = ModifierServiceLoader.load();
+        Assertions.assertEquals(2, converterServiceLoader.get(String.class).size());
     }
 }

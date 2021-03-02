@@ -4,7 +4,15 @@ package com.github.nmuzhichin.jdummy.modifier;
  * @author nmuzhichin
  * @since 20.02.2021
  */
-public interface ValueModifier {
+public abstract class ValueModifier {
 
-    <T> T modify(String name, Class<T> valueType);
+    public abstract Class<?> valueType();
+
+    public final <T> T modify(String meta) {
+        return meta != null && verify(meta) ? createValue(meta) : null;
+    }
+
+    abstract <T> T createValue(String meta);
+
+    abstract boolean verify(String meta);
 }

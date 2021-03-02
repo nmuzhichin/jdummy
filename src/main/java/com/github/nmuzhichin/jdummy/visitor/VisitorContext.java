@@ -3,16 +3,29 @@ package com.github.nmuzhichin.jdummy.visitor;
 import com.github.nmuzhichin.jdummy.cache.CacheReadWriter;
 import com.github.nmuzhichin.jdummy.cache.CacheWriter;
 import com.github.nmuzhichin.jdummy.element.Elements;
+import com.github.nmuzhichin.jdummy.modifier.ModifierAccessible;
+import com.github.nmuzhichin.jdummy.modifier.ModifierServiceLoader;
+import com.github.nmuzhichin.jdummy.modifier.ValueModifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class VisitorContext implements VisitorAccepter, CacheReadWriter {
+public final class VisitorContext implements VisitorAccepter,
+        CacheReadWriter, ModifierAccessible {
 
     private static final ThreadLocal<VisitorContext> context =
             ThreadLocal.withInitial(VisitorContext::new);
+
+    private static final Map<Class<?>, List<ValueModifier>> modifiers;
+
+    static {
+        modifiers = ModifierServiceLoader.load();
+    }
 
     private final Map<Class<?>, Object> cacheReadinessValue;
 
@@ -25,6 +38,10 @@ public final class VisitorContext implements VisitorAccepter, CacheReadWriter {
     }
 
     public static CacheWriter currentCacheWriter() {
+        return context.get();
+    }
+
+    public static ModifierAccessible currentValueModifiers() {
         return context.get();
     }
 
@@ -76,5 +93,14 @@ public final class VisitorContext implements VisitorAccepter, CacheReadWriter {
     @Override
     public boolean contains(Class<?> type) {
         return cacheReadinessValue.containsKey(type);
+    }
+
+    @Override
+    public <T> Optional<T> modifyByType(Class<T> type, String meta) {
+        return modifiers.getOrDefault(type, List.of())
+                .stream()
+                .map(valueModifier -> (T) valueModifier.modify(meta))
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 }

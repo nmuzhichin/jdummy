@@ -1,19 +1,21 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.modifier.ModifierServiceLoader;
+import com.github.nmuzhichin.jdummy.modifier.ModifierAccessible;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 final class JavaCoreVisitor extends AbstractMetaValueVisitor {
 
+    private ModifierAccessible modifierAccessible;
+
     JavaCoreVisitor(MetaValue type) {
         super(type);
+        this.modifierAccessible = VisitorContext.currentValueModifiers();
     }
 
     @Override
@@ -32,11 +34,7 @@ final class JavaCoreVisitor extends AbstractMetaValueVisitor {
     }
 
     private void visitAsStringType() {
-        var value = ModifierServiceLoader.newServiceLoader()
-                .openValueModifierStream()
-                .map(it -> it.modify(metaValue.getMeta(), String.class))
-                .filter(Objects::nonNull)
-                .findFirst()
+        var value = modifierAccessible.modifyByType(String.class, metaValue.getMeta())
                 .orElse("Hello, I'm Jdummy");
         metaValue.setValue(value);
     }
