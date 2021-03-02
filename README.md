@@ -27,11 +27,11 @@ Get from maven
 <dependency>
     <groupId>com.github.nmuzhichin</groupId>
     <artifactId>jdummy</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <scope>test</scope>
 </dependency>
 ```
 or gradle
 ```groovy
-testImplementation 'com.github.nmuzhichin:jdummy:1.0.2'
+testImplementation 'com.github.nmuzhichin:jdummy:1.0.3'
 ```
