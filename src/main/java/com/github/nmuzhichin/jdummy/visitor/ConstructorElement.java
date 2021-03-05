@@ -1,10 +1,9 @@
-package com.github.nmuzhichin.jdummy.element;
-
-import com.github.nmuzhichin.jdummy.visitor.Visitor;
+package com.github.nmuzhichin.jdummy.visitor;
 
 import java.lang.reflect.Constructor;
 
-final class ConstructorElement extends Element {
+final class ConstructorElement
+        extends Element {
 
     private final Constructor<?> constructor;
 
@@ -14,10 +13,11 @@ final class ConstructorElement extends Element {
 
     @Override
     public void accept(Visitor visitor) {
-        visitor.visitConstructor(constructor);
+        visitor.visitConstructor(this);
     }
 
-    Constructor<?> getConstructor() {
+    @Override
+    public Constructor<?> getUnderlying() {
         return constructor;
     }
 }

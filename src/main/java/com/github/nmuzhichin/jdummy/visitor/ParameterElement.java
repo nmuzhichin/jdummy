@@ -1,10 +1,9 @@
-package com.github.nmuzhichin.jdummy.element;
-
-import com.github.nmuzhichin.jdummy.visitor.Visitor;
+package com.github.nmuzhichin.jdummy.visitor;
 
 import java.lang.reflect.Parameter;
 
-final class ParameterElement extends Element {
+final class ParameterElement
+        extends Element {
 
     private final Parameter parameter;
 
@@ -14,6 +13,11 @@ final class ParameterElement extends Element {
 
     @Override
     public void accept(Visitor visitor) {
-        visitor.visitParameter(parameter);
+        visitor.visitParameter(this);
+    }
+
+    @Override
+    public Parameter getUnderlying() {
+        return parameter;
     }
 }

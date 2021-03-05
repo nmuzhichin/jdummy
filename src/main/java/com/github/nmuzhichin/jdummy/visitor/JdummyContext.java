@@ -1,11 +1,9 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.cache.CacheReadWriter;
-import com.github.nmuzhichin.jdummy.cache.CacheWriter;
-import com.github.nmuzhichin.jdummy.element.Elements;
-import com.github.nmuzhichin.jdummy.modifier.ModifierAccessible;
+import com.github.nmuzhichin.jdummy.CacheWriter;
+import com.github.nmuzhichin.jdummy.ElementAccepter;
+import com.github.nmuzhichin.jdummy.ModifierAccessible;
 import com.github.nmuzhichin.jdummy.modifier.ModifierServiceLoader;
-import com.github.nmuzhichin.jdummy.modifier.ValueModifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -15,25 +13,26 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class VisitorContext implements VisitorAccepter,
-        CacheReadWriter, ModifierAccessible {
+/**
+ * @author nmuzhichin
+ * @since 02.03.2021
+ */
+public final class JdummyContext
+        implements ElementAccepter, CacheWriter, ModifierAccessible {
 
-    private static final ThreadLocal<VisitorContext> context =
-            ThreadLocal.withInitial(VisitorContext::new);
+    private static final ThreadLocal<JdummyContext> context =
+            ThreadLocal.withInitial(JdummyContext::new);
 
-    private static final Map<Class<?>, List<ValueModifier>> modifiers;
-
-    static {
-        modifiers = ModifierServiceLoader.load();
-    }
+    private static final ModifierServiceLoader modifiersLoader =
+            new ModifierServiceLoader();
 
     private final Map<Class<?>, Object> cacheReadinessValue;
 
-    private VisitorContext() {
+    private JdummyContext() {
         this.cacheReadinessValue = new ConcurrentHashMap<>(32);
     }
 
-    public static VisitorAccepter currentAccepter() {
+    public static ElementAccepter currentAccepter() {
         return context.get();
     }
 
@@ -81,11 +80,6 @@ public final class VisitorContext implements VisitorAccepter,
     }
 
     @Override
-    public Object read(Class<?> type) {
-        return cacheReadinessValue.get(type);
-    }
-
-    @Override
     public void write(Class<?> type, Object value) {
         cacheReadinessValue.put(type, value);
     }
@@ -98,7 +92,8 @@ public final class VisitorContext implements VisitorAccepter,
     @SuppressWarnings("unchecked")
     @Override
     public <T> Optional<T> modifyByType(Class<T> type, String meta) {
-        return modifiers.getOrDefault(type, List.of())
+        return modifiersLoader.getModifiers()
+                .getOrDefault(type, List.of())
                 .stream()
                 .map(valueModifier -> (T) valueModifier.modify(meta))
                 .filter(Objects::nonNull)

@@ -2,7 +2,7 @@ package com.github.nmuzhichin.jdummy.visitor;
 
 import java.lang.reflect.Type;
 
-public final class MetaValue {
+final class MetaValue {
 
     private final String meta;
 

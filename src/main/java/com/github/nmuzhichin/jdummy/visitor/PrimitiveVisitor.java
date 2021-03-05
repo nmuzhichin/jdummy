@@ -12,9 +12,9 @@ final class PrimitiveVisitor extends AbstractMetaValueVisitor {
     }
 
     @Override
-    public void visitType(Class<?> type) {
+    public void visitType(TypeElement e) {
 
-        Class<?> primitiveType = Reflections.primitiveUnwrap(type);
+        Class<?> primitiveType = Reflections.primitiveUnwrap(e.getUnderlying());
         if (primitiveType == Void.TYPE) {
             visitAsVoid();
         } else if (primitiveType == Boolean.TYPE) {

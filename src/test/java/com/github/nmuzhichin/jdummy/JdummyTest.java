@@ -1,5 +1,7 @@
 package com.github.nmuzhichin.jdummy;
 
+import com.github.nmuzhichin.mock.CircularAttribute;
+import com.github.nmuzhichin.mock.FullName;
 import com.github.nmuzhichin.mock.RoleUserMap;
 import com.github.nmuzhichin.mock.User;
 import org.junit.jupiter.api.Assertions;
@@ -81,5 +83,20 @@ class JdummyTest {
 
         var userStream = Stream.generate(() -> Jdummy.of(User.class));
         Assertions.assertTrue(userStream.limit(10).allMatch(Objects::nonNull));
+    }
+
+    @Test
+    void of() {
+
+        var attr = Assertions.assertDoesNotThrow(() -> Jdummy.of(CircularAttribute.class));
+        Assertions.assertNotNull(attr);
+    }
+
+    @Test
+    void putCache() {
+        var fullName = new FullName("A", "B");
+        Jdummy.putCache(fullName);
+        var user = Jdummy.of(User.class);
+        Assertions.assertEquals(fullName, user.getFullName());
     }
 }

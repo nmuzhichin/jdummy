@@ -15,7 +15,8 @@ final class ArrayVisitor extends AbstractMetaValueVisitor {
     }
 
     @Override
-    public void visitType(Class<?> type) {
+    public void visitType(TypeElement element) {
+        var type = element.getUnderlying();
         if (type == boolean[].class) {
             visitAsBooleanArray();
         } else if (type == byte[].class) {

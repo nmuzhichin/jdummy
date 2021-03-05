@@ -1,12 +1,9 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.cache.CacheWriter;
+import com.github.nmuzhichin.jdummy.CacheWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -21,20 +18,20 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     PojoVisitor(MetaValue type) {
         super(type);
-        this.cacheWriter = VisitorContext.currentCacheWriter();
+        this.cacheWriter = JdummyContext.currentCacheWriter();
         this.builder = new Builder();
     }
 
     @Override
-    public void visitType(Class<?> type) {
-        builder.setType(type);
+    public void visitType(TypeElement element) {
+        builder.setType(element.getUnderlying());
     }
 
     @Override
-    public void visitConstructor(Constructor<?> constructor) {
+    public void visitConstructor(ConstructorElement element) {
         builder.constructorInvocation = arg -> {
             try {
-                return constructor.newInstance(arg);
+                return element.getUnderlying().newInstance(arg);
             } catch (Exception e) {
                 if (log.isErrorEnabled()) {
                     log.error(e.getMessage(), e);
@@ -45,19 +42,20 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
     }
 
     @Override
-    public void visitParameter(Parameter parameter) {
-        builder.constructorArgs.add(visitorAccepter.accept(parameter));
+    public void visitParameter(ParameterElement element) {
+        builder.constructorArgs.add(elementAccepter.accept(element.getUnderlying()));
     }
 
     @Override
-    public void visitField(Field field) {
+    public void visitField(FieldElement element) {
 
+        var field = element.getUnderlying();
         if (!cacheWriter.contains(field.getType())) {
             try {
                 var instance = tryBuild();
                 field.setAccessible(true);
                 if (field.get(instance) == null) {
-                    field.set(instance, visitorAccepter.accept(field));
+                    field.set(instance, elementAccepter.accept(field));
                 }
             } catch (Exception e) {
                 // skip, field = null

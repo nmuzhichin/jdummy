@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.element;
+package com.github.nmuzhichin.jdummy.visitor;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -10,19 +10,19 @@ import java.util.stream.Stream;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.stream;
 
-public final class Elements {
+final class Elements {
 
     private Elements() {
         // use static methods
     }
 
-    public static List<Element> newAllElements(Class<?> type) {
+    static List<Element> newAllElements(Class<?> type) {
 
         var list = new ArrayList<Element>();
         list.add(newTypeElement(type));
         var constructorElement = newConstructorElement(type);
         if (!(constructorElement instanceof NullElement)) {
-            var constructor = ((ConstructorElement) constructorElement).getConstructor();
+            var constructor = ((ConstructorElement) constructorElement).getUnderlying();
             list.add(constructorElement);
             list.addAll(newParameterElements(constructor));
         }
@@ -30,12 +30,12 @@ public final class Elements {
         return list;
     }
 
-    public static Element newTypeElement(Class<?> type) {
+    static Element newTypeElement(Class<?> type) {
 
-        return new TypeElement<>(type);
+        return new TypeElement(type);
     }
 
-    public static Element newConstructorElement(Class<?> type) {
+    static Element newConstructorElement(Class<?> type) {
 
         return stream(type.getDeclaredConstructors())
                 .filter(c -> isPublic(c.getModifiers()))
@@ -44,14 +44,14 @@ public final class Elements {
                 .orElse(NullElement.NULL_ELEMENT);
     }
 
-    public static List<Element> newParameterElements(Constructor<?> constructor) {
+    static List<Element> newParameterElements(Constructor<?> constructor) {
 
         return stream(constructor.getParameters())
                 .map(ParameterElement::new)
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public static Stream<Element> newFieldElements(Class<?> type) {
+    static Stream<Element> newFieldElements(Class<?> type) {
 
         if (type == null) {
             return Stream.empty();

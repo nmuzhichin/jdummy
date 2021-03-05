@@ -10,8 +10,9 @@ final class EnumVisitor extends AbstractMetaValueVisitor {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void visitType(Class<?> type) {
+    public void visitType(TypeElement element) {
 
+        var type = element.getUnderlying();
         var constants = ((Class<? extends Enum<?>>) type).getEnumConstants();
         if (constants.length > 0) {
             int rangeRandomIdx = ThreadLocalRandom.current().nextInt(0, constants.length);

@@ -1,3 +1,4 @@
-com.github.nmuzhichin.jdummy.modifier.PredefineNumberStringValueModifier
+com.github.nmuzhichin.jdummy.modifier.NumericStringValueModifier
 com.github.nmuzhichin.jdummy.modifier.ZoneStringValueModifier
 com.github.nmuzhichin.jdummy.modifier.NameValueModifier
+com.github.nmuzhichin.jdummy.modifier.UuidStringValueModifier

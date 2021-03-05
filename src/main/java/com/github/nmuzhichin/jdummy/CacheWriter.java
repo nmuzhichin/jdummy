@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.cache;
+package com.github.nmuzhichin.jdummy;
 
 /**
  * @author nmuzhichin

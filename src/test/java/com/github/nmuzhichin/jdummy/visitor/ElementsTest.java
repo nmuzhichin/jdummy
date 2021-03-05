@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.element;
+package com.github.nmuzhichin.jdummy.visitor;
 
 import com.github.nmuzhichin.mock.FullName;
 import com.github.nmuzhichin.mock.User;

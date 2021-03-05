@@ -3,16 +3,15 @@ package com.github.nmuzhichin.jdummy.modifier;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class PredefineNumberStringValueModifier extends ValueModifier {
+public class NumericStringValueModifier extends ValueModifier<String> {
 
     // todo use some file?
-    private final Set<String> predefineList = Set.of("arg", "id", "age",
+    private final Set<String> predefineList = Set.of("arg", "age",
             "number", "position", "page", "int", "long");
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> T createValue(String name) {
-        return (T) String.valueOf(ThreadLocalRandom.current().nextInt());
+    public String createValue(String name) {
+        return String.valueOf(ThreadLocalRandom.current().nextInt());
     }
 
     @Override
@@ -27,7 +26,7 @@ public class PredefineNumberStringValueModifier extends ValueModifier {
     }
 
     @Override
-    public Class<?> valueType() {
+    public Class<String> valueType() {
         return String.class;
     }
 }

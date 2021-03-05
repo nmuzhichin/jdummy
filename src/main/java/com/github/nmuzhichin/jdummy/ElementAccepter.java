@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.visitor;
+package com.github.nmuzhichin.jdummy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
@@ -7,7 +7,7 @@ import java.lang.reflect.Parameter;
  * @author nmuzhichin
  * @since 24.02.2021
  */
-public interface VisitorAccepter {
+public interface ElementAccepter {
 
     <T> T accept(Parameter p);
 

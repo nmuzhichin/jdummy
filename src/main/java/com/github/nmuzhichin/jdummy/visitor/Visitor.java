@@ -1,24 +1,23 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Parameter;
-
 /**
  * @author nmuzhichin
  * @since 08.02.2021
  */
-public interface Visitor {
+interface Visitor {
 
-    default void visitType(Class<?> type) {
+    default void visit(Element e) {
     }
 
-    default void visitConstructor(Constructor<?> constructor) {
+    default void visitType(TypeElement e) {
     }
 
-    default void visitParameter(Parameter parameter) {
+    default void visitConstructor(ConstructorElement e) {
     }
 
-    default void visitField(Field field) {
+    default void visitParameter(ParameterElement e) {
+    }
+
+    default void visitField(FieldElement e) {
     }
 }

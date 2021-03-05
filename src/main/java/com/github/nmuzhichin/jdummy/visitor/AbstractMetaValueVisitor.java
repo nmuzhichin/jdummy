@@ -1,13 +1,15 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
+import com.github.nmuzhichin.jdummy.ElementAccepter;
+
 abstract class AbstractMetaValueVisitor implements Visitor {
 
     protected final MetaValue metaValue;
 
-    protected final VisitorAccepter visitorAccepter;
+    protected final ElementAccepter elementAccepter;
 
     AbstractMetaValueVisitor(MetaValue metaValue) {
         this.metaValue = metaValue;
-        this.visitorAccepter = VisitorContext.currentAccepter();
+        this.elementAccepter = JdummyContext.currentAccepter();
     }
 }

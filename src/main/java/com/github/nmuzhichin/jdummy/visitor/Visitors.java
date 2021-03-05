@@ -1,6 +1,6 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-public final class Visitors {
+final class Visitors {
 
     private Visitors() {
         // use statics methods

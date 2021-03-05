@@ -50,8 +50,9 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
     }
 
     @Override
-    public void visitType(Class<?> type) {
+    public void visitType(TypeElement element) {
 
+        var type = element.getUnderlying();
         if (Map.class.isAssignableFrom(type)) {
             visitAsMap((Class<? extends Map>) type);
         } else if (Set.class.isAssignableFrom(type)) {
@@ -144,7 +145,7 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
     private List<Object> dummies(Class<?> clz) {
 
         try {
-            return Stream.generate(() -> visitorAccepter.accept(clz))
+            return Stream.generate(() -> elementAccepter.accept(clz))
                     .limit(COLLECTION_SIZE_FOR_DUMMY)
                     .collect(Collectors.toList());
         } catch (StackOverflowError overflowError) {

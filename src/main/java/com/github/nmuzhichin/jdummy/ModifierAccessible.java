@@ -1,4 +1,4 @@
-package com.github.nmuzhichin.jdummy.modifier;
+package com.github.nmuzhichin.jdummy;
 
 import java.util.Optional;
 

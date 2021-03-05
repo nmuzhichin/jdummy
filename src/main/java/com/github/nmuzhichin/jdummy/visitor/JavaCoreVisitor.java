@@ -1,6 +1,6 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.modifier.ModifierAccessible;
+import com.github.nmuzhichin.jdummy.ModifierAccessible;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -15,12 +15,13 @@ final class JavaCoreVisitor extends AbstractMetaValueVisitor {
 
     JavaCoreVisitor(MetaValue type) {
         super(type);
-        this.modifierAccessible = VisitorContext.currentValueModifiers();
+        this.modifierAccessible = JdummyContext.currentValueModifiers();
     }
 
     @Override
-    public void visitType(Class<?> type) {
+    public void visitType(TypeElement element) {
 
+        var type = element.getUnderlying();
         var packageName = type.getPackageName();
         if (CharSequence.class.isAssignableFrom(type)) {
             visitAsStringType();
