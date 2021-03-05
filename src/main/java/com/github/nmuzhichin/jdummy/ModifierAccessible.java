@@ -14,8 +14,9 @@ public interface ModifierAccessible {
     /**
      * Modify value using ValueModifiers
      *
-     * @param type Type
+     * @param type Class
      * @param meta Element info (field name, for example)
+     * @param <T>  Type
      * @return Modified value of type T or empty
      */
     <T> Optional<T> modifyByType(Class<T> type, String meta);
