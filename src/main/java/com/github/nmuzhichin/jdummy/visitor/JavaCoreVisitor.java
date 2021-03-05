@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 final class JavaCoreVisitor extends AbstractMetaValueVisitor {
 
-    private ModifierAccessible modifierAccessible;
+    private final ModifierAccessible modifierAccessible;
 
     JavaCoreVisitor(MetaValue type) {
         super(type);

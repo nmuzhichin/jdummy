@@ -95,6 +95,7 @@ public final class VisitorContext implements VisitorAccepter,
         return cacheReadinessValue.containsKey(type);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> Optional<T> modifyByType(Class<T> type, String meta) {
         return modifiers.getOrDefault(type, List.of())

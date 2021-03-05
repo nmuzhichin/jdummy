@@ -9,6 +9,6 @@ class ModifierServiceLoaderTest {
     void newConverterServiceLoader() {
 
         var converterServiceLoader = ModifierServiceLoader.load();
-        Assertions.assertEquals(2, converterServiceLoader.get(String.class).size());
+        Assertions.assertEquals(3, converterServiceLoader.get(String.class).size());
     }
 }

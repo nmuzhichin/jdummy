@@ -1,15 +1,19 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
-import com.github.nmuzhichin.jdummy.Jdummy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 final class CollectionVisitor extends AbstractMetaValueVisitor {
+
+    private static final Logger log = LoggerFactory.getLogger(CollectionVisitor.class);
 
     private static final Integer COLLECTION_SIZE_FOR_DUMMY = Integer.getInteger("collection.dummy.size", 4);
 
@@ -140,11 +144,13 @@ final class CollectionVisitor extends AbstractMetaValueVisitor {
     private List<Object> dummies(Class<?> clz) {
 
         try {
-            return Jdummy.manyOf(clz)
+            return Stream.generate(() -> visitorAccepter.accept(clz))
                     .limit(COLLECTION_SIZE_FOR_DUMMY)
                     .collect(Collectors.toList());
         } catch (StackOverflowError overflowError) {
-            // fixme log
+            if (log.isErrorEnabled()) {
+                log.error(overflowError.getMessage(), overflowError);
+            }
             return List.of();
         }
     }

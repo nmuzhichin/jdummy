@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 class JdummyTest {
 
@@ -35,7 +36,7 @@ class JdummyTest {
     })
     void createPrimitiveStream(Class<?> type) {
 
-        var primitiveStream = Jdummy.manyOf(type);
+        var primitiveStream = Stream.generate(() -> Jdummy.of(type));
         Assertions.assertNotNull(primitiveStream);
         Assertions.assertTrue(primitiveStream.limit(100_000).allMatch(Objects::nonNull));
     }
@@ -78,7 +79,7 @@ class JdummyTest {
     @Test
     void createMany() {
 
-        var userStream = Jdummy.manyOf(User.class);
+        var userStream = Stream.generate(() -> Jdummy.of(User.class));
         Assertions.assertTrue(userStream.limit(10).allMatch(Objects::nonNull));
     }
 }

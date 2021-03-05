@@ -1,6 +1,8 @@
 package com.github.nmuzhichin.jdummy.visitor;
 
 import com.github.nmuzhichin.jdummy.cache.CacheWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -11,17 +13,16 @@ import java.util.function.Function;
 
 final class PojoVisitor extends AbstractMetaValueVisitor {
 
+    private static final Logger log = LoggerFactory.getLogger(PojoVisitor.class);
+
+    private final CacheWriter cacheWriter;
+
     private Builder builder;
-
-    private VisitorAccepter accepter;
-
-    private CacheWriter cacheWriter;
 
     PojoVisitor(MetaValue type) {
         super(type);
-        this.builder = new Builder();
-        this.accepter = VisitorContext.currentAccepter();
         this.cacheWriter = VisitorContext.currentCacheWriter();
+        this.builder = new Builder();
     }
 
     @Override
@@ -35,6 +36,9 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
             try {
                 return constructor.newInstance(arg);
             } catch (Exception e) {
+                if (log.isErrorEnabled()) {
+                    log.error(e.getMessage(), e);
+                }
                 throw new RuntimeException(e);
             }
         };
@@ -42,7 +46,7 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
 
     @Override
     public void visitParameter(Parameter parameter) {
-        builder.constructorArgs.add(accepter.accept(parameter));
+        builder.constructorArgs.add(visitorAccepter.accept(parameter));
     }
 
     @Override
@@ -53,12 +57,13 @@ final class PojoVisitor extends AbstractMetaValueVisitor {
                 var instance = tryBuild();
                 field.setAccessible(true);
                 if (field.get(instance) == null) {
-                    field.set(instance, accepter.accept(field));
+                    field.set(instance, visitorAccepter.accept(field));
                 }
             } catch (Exception e) {
                 // skip, field = null
-                // todo add log
-                e.printStackTrace();
+                if (log.isErrorEnabled()) {
+                    log.error(e.getMessage(), e);
+                }
             } finally {
                 field.setAccessible(false);
             }
