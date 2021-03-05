@@ -93,10 +93,16 @@ class JdummyTest {
     }
 
     @Test
-    void putCache() {
-        var fullName = new FullName("A", "B");
-        Jdummy.putCache(fullName);
-        var user = Jdummy.of(User.class);
-        Assertions.assertEquals(fullName, user.getFullName());
+    void putCache() throws InterruptedException {
+
+        Runnable action = () -> {
+            var fullName = new FullName("A", "B");
+            Jdummy.putCache(fullName);
+            var user = Jdummy.of(User.class);
+            Assertions.assertEquals(fullName, user.getFullName());
+        };
+        var thread = new Thread(action); // isolate this test case
+        thread.start();
+        thread.join();
     }
 }
