@@ -60,7 +60,7 @@ publishing {
             from components.java
             pom {
                 name = rootProject.name
-                description = rootProject.description
+                description = project.description
                 url = 'https://github.com/nmuzhichin/jdummy'
                 licenses {
                     license {
