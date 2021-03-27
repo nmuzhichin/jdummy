@@ -8,3 +8,5 @@
  */
 
 rootProject.name = 'jdummy'
+include 'jdummy-core'
+include 'jdummy-junit5'

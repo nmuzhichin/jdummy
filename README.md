@@ -22,19 +22,41 @@ class VeryBoringTest {
 }
 ```
 
+or use junit5 extension
+```java
+@ExtendWith(JdummyExtension.class)
+class JdummyExtensionTest {
+
+    @Test
+    @JdummySource
+    void generateInteger(Integer value) {
+        Assertions.assertNotNull(value, "Value must be generated");
+    }
+}
+```
+
 ### Download
 Maven
 ```xml
 <dependency>
     <groupId>com.github.nmuzhichin</groupId>
-    <artifactId>jdummy</artifactId>
-    <version>1.0.4</version>
+    <artifactId>jdummy-core</artifactId>
+    <version>1.1.0</version>
+    <scope>test</scope>
+</dependency>
+<!-- For junit-jupiter extension -->
+<dependency>
+    <groupId>com.github.nmuzhichin</groupId>
+    <artifactId>jdummy-junit5</artifactId>
+    <version>1.1.0</version>
     <scope>test</scope>
 </dependency>
 ```
 Gradle
 ```groovy
-testImplementation 'com.github.nmuzhichin:jdummy:1.0.4'
+testImplementation 'com.github.nmuzhichin:jdummy-core:1.1.0'
+// For junit-jupiter extension
+testImplementation 'com.github.nmuzhichin:jdummy-junit5:1.1.0'
 ```
 
 ### Advanced features

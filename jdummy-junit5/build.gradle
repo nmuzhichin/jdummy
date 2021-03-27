@@ -1,0 +1,8 @@
+plugins {
+    id 'jdummy-plugin'
+}
+
+dependencies {
+    api project(":jdummy-core")
+    api "org.junit.jupiter:junit-jupiter-api:$jupiterVersion"
+}
