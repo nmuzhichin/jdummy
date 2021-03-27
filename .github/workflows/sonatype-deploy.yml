@@ -34,7 +34,7 @@ jobs:
           echo "$GPG_FILE" | base64 -d > ./secring.gpg
           ./gradlew publish \
           -Papp.version=$APP_VERSION \
-          -Psigning.secretKeyRingFile=secring.gpg \
+          -Psigning.secretKeyRingFile=./secring.gpg \
           -Psigning.password=$GPG_PASSWORD \
           -Psigning.keyId=$GPG_KEY_ID \
           -Psonatype.username=$SONATYPE_USERNAME \
