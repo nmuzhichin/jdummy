@@ -31,11 +31,11 @@ jobs:
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           APP_VERSION: ${{ github.event.inputs.release_version }}
         run: |
-          ls -lah
-          echo "$GPG_FILE" | base64 -d > secring.gpg
+          gpgPath=$(pwd)
+          echo "$GPG_FILE" | base64 -d > "$gpgPath/secring.gpg"
           ./gradlew publish \
           -Papp.version=$APP_VERSION \
-          -Psigning.secretKeyRingFile=secring.gpg \
+          -Psigning.secretKeyRingFile="$gpgPath/secring.gpg" \
           -Psigning.password=$GPG_PASSWORD \
           -Psigning.keyId=$GPG_KEY_ID \
           -Psonatype.username=$SONATYPE_USERNAME \
